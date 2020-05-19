@@ -1,5 +1,3 @@
-extern crate libc;
-
 use std::os::unix::io::{AsRawFd, RawFd};
 use std::os::unix::net;
 use std::{alloc, io, mem, ptr};
@@ -95,6 +93,7 @@ fn send_with_fd(socket: RawFd, bs: &[u8], fds: &[RawFd]) -> io::Result<usize> {
                 cmsg_len: libc::CMSG_LEN(fd_len as u32) as _,
             },
         );
+        #[allow(clippy::cast_ptr_alignment)]
         let cmsg_data = libc::CMSG_DATA(cmsg_header) as *mut RawFd;
         for (i, fd) in fds.iter().enumerate() {
             ptr::write_unaligned(cmsg_data.add(i), *fd);
@@ -143,6 +142,7 @@ fn recv_with_fd(socket: RawFd, bs: &mut [u8], mut fds: &mut [RawFd]) -> io::Resu
                 debug_assert!((*cmsg_header).cmsg_len as isize > data_offset);
                 debug_assert!(data_byte_count % mem::size_of::<RawFd>() == 0);
                 let rawfd_count = (data_byte_count / mem::size_of::<RawFd>()) as isize;
+                #[allow(clippy::cast_ptr_alignment)]
                 let fd_ptr = data_ptr as *const RawFd;
                 for i in 0..rawfd_count {
                     if let Some((dst, rest)) = { fds }.split_first_mut() {

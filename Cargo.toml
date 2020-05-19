@@ -1,12 +1,12 @@
 [package]
-name = "sendfd"
+name = "sendfd-new"
 version = "0.3.0"
 authors = [
     "Simonas Kazlauskas <simonas@standard.ai>",
     "Bernardo Meurer <bernardo@standard.ai>",
     "Léo Gaspard <leo@standard.ai>"
 ]
-edition = "2015"
+edition = "2018"
 description = "Send file descriptors along with data over UNIX domain sockets"
 keywords = ["ipc"]
 license = "Apache-2.0 OR BSD-3-Clause"
